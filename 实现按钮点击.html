@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		
+	</head>
+	<body>
+		直接为元素添加点击事件：<button onclick="fun1()">按钮1</button><br>
+		使用DOM绑定click事件：<button id="btn2">按钮2</button><br>
+		使用DOM的事件监听：<button id="btn3">按钮3</button><br>
+		使用jQuery的click事件：<button id="btn4">按钮4</button><br>
+		使用jQuery的bind事件：<button id="btn5">按钮5</button><br>
+		<script src="jquery-3.7.0.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" >
+			function fun1(){
+				alert("你已经点击了按钮1");
+			}
+			document.getElementById("btn2").onclick=function(){
+				alert("你已经点击了按钮2");
+			}
+			var btn3 = $("#btn3")[0];
+			$(btn3).on("click", function() {
+			  alert("已点击了按钮3");
+			});
+			$("#btn4").click(function(){
+				alert("你已经点击了按钮4");
+			});
+			$("#btn5").bind("click",function(){
+				alert("你已经点击了按钮5");
+			});
+		</script>
+		
+	</body>
+</html>

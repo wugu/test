@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			.hide{
+				display: none;
+			}
+		</style>
+		<script src="jquery-3.7.0.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+            //加载数据
+			var huas = [];
+			$(function(){
+				$.ajax({
+					url:"data.json",
+					type:"get",
+					dataType:"json",
+					async:false,
+					success:function(data){
+						huas=data;
+						console.log(huas)
+						init();
+					}
+				})
+			})
+            // 将数据显示在网页中
+			function init(){
+				var tr1=$("<tr></tr>")
+				tr1.append($("<th>序号</th>"));
+				tr1.append($("<th>名称</th>"));
+				tr1.append($("<th>朝代</th>"));
+				tr1.append($("<th>作者</th>"));
+				tr1.append($("<th>操作</th>"));
+				$("table").append(tr1);
+				for (let i = 0; i < huas.length; i++) {
+					var tr=$("<tr></tr>");
+					tr.append(gettd(huas[i].id));
+					tr.append(gettd(huas[i].name));
+					tr.append(gettd(huas[i].dynasty));
+					tr.append(gettd(huas[i].author));
+					var td=$("<td></td>");
+					td.append($("<button class='btn-edit'>编辑</button>"));
+					td.append($("<button class='btn-del'>删除</button>"));
+					td.append($("<button class='btn-save'>保存</button>"));
+					td.append($("<button class='btn-cel'>取消</button>"));
+					tr.append(td);
+					$("table").append(tr);
+				}
+				var trend=$("<tr></tr>");
+				trend.append($("<td align='center'colspan=5><button class='btn-add'>添加</button></td>"));
+				$("table").append(trend);
+				$("input").attr("disabled","disabled");
+				$(".btn-save").addClass("hide");
+				$(".btn-cel").addClass("hide");
+				$(".btn-add").click(add);
+                $(".btn-del").click(del);
+                $(".btn-edit").click(edit);
+			}
+            function edit(){
+                var row = $(this).closest('tr');
+// 隐藏其他行的操作按钮
+row.siblings().find('.btn-edit, .btn-del').hide();
+// 显示当前行的保存和取消按钮
+row.find('.btn-save, .btn-cel').show();
+// 显示当前行的编辑和删除按钮
+row.find('.btn-edit, .btn-del').show();
+// 隐藏当前行的编辑和删除按钮
+$(this).hide();
+row.find('.btn-del').hide();
+// 将列的输入框设置为可编辑状态
+const len = $(window.event.target)[0].parentNode.parentNode.childElementCount
+            for (let i = 0; i < len - 1; i++) {
+                $(window.event.target)[0].parentNode.parentNode.childNodes[i].childNodes[0].removeAttribute('disabled');
+            }
+//添加保存和取消事件
+$(".btn-save").bind("click",save);
+$(".btn-cel").bind("click",cel);
+            }
+            function del(){
+                if(confirm("是否删除？")){
+                $(window.event.target)[0].parentNode.parentNode.style = 'display:none';
+                }
+            }
+			function add(){
+				var tr=$("<tr></tr>")
+				tr.append(gettd());
+				tr.append(gettd());
+				tr.append(gettd());
+				tr.append(gettd());
+				var td=$("<td></td>")
+				td.append($("<button class='btn-save'>保存</button>"));
+				td.append($("<button class='btn-cel'>取消</button>"));
+				tr.append(td);
+				$(event.target.parentNode.parentNode).before(tr);
+				$(".btn-add").addClass("hide");
+				$(".btn-cel").bind("click",cel);
+				$(".btn-save").bind("click",save);
+			}
+			function save(){
+				var index=$(".btn-save").index(event.target)+1;//index方法用来检索当前按钮是哪一个			
+				var id=$("tr:eq("+index+") input").eq(0).val();
+				var name=$("tr:eq("+index+") input").eq(1).val();
+				var dynasty=$("tr:eq("+index+") input").eq(2).val();
+				var author=$("tr:eq("+index+") input").eq(3).val();
+				if(id=="" || name=="" || dynasty=="" || author==""){
+					alert("数据不完整!");
+					return;
+				}
+                else{
+                    alert("是否保存？")
+                }
+				var hua={};
+				hua.id = id;
+				hua.name = name;
+				hua.dynasty=dynasty;
+				hua.author=author;
+				huas[index-1] = hua;
+				$("table").html("")
+				init();
+		
+			}
+			function cel(){
+				if(confirm("是否要取消编辑?")){
+					$("table").html("")
+					init();
+				}
+			}
+			function gettd(e){
+				var td=$("<td></td>")
+				var input=$("<input size=8/>")
+				if(e){
+					input.val(e)
+				}
+				td.append(input)
+				return td;
+			}
+		</script>
+	</head>
+	<body>
+		<table>
+			
+		</table>
+	</body>
+</html>
